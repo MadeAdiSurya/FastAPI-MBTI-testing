@@ -9,21 +9,21 @@ def create_question(request: QuestionSchema, db: Session, user:str):
             detail="Fitur ini hanya dapat digunakan oleh admin."
         )
 
-    masalah = db.query(Question).filter(Question.masalah == request.masalah)
+    pertanyaan = db.query(Question).filter(Question.pertanyaan == request.pertanyaan)
 
-    if masalah.first():
+    if pertanyaan.first():
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Masalah tersebut sudah ada."
+            detail="Pertanyaan tersebut sudah ada."
         )
 
-    masalah_baru = Question(masalah=request.masalah, pilihan=request.pilihan)
-    db.add(masalah_baru)
+    pertanyaan_baru = Question(pertanyaan=request.pertanyaan, pilihan=request.pilihan)
+    db.add(pertanyaan_baru)
     db.commit()
-    db.refresh(masalah_baru)
+    # db.refresh(pertanyaan_baru)
 
     return {
-        "Pesan": "Masalah berhasil ditambahkan."
+        "Pesan": "Pertanyaan berhasil ditambahkan."
     }
 
 
@@ -32,15 +32,15 @@ def get_questions(db: Session):
 
 
 def get_question(id: int, db: Session):
-    masalah = db.query(Question).filter(Question.id == id)
+    pertanyaan = db.query(Question).filter(Question.id == id)
 
-    if not masalah.first():
+    if not pertanyaan.first():
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Masalah dengan id tersebut tidak ditemukan."
+            detail="pertanyaan dengan id tersebut tidak ditemukan."
         )
 
-    return masalah.first()
+    return pertanyaan.first()
 
 
 def update_question(id: int, request: QuestionUpdate, db: Session, user:str):
@@ -50,19 +50,19 @@ def update_question(id: int, request: QuestionUpdate, db: Session, user:str):
             detail="Fitur ini hanya dapat digunakan oleh admin."
         )
 
-    masalah = db.query(Question).filter(Question.id == id)
+    pertanyaan = db.query(Question).filter(Question.id == id)
 
-    if not masalah.first():
+    if not pertanyaan.first():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Masalah dengan id tersebut tidak ditemukan."
+            detail="pertanyaan dengan id tersebut tidak ditemukan."
         )
 
-    masalah.update({'masalah': request.masalah})
+    pertanyaan.update({'pertanyaan': request.pertanyaan})
     db.commit()
 
     return {
-        "Pesan": "Masalah berhasil diperbarui."
+        "Pesan": "pertanyaan berhasil diperbarui."
     }
 
 
@@ -73,17 +73,17 @@ def delete_question(id: int, db: Session, user:str):
             detail="Fitur ini hanya dapat digunakan oleh admin."
         )
 
-    masalah = db.query(Question).filter(Question.id == id)
+    pertanyaan = db.query(Question).filter(Question.id == id)
 
-    if not masalah.first():
+    if not pertanyaan.first():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Masalah dengan id tersebut tidak ditemukan."
+            detail="pertanyaan dengan id tersebut tidak ditemukan."
         )
 
-    masalah.delete(synchronize_session=False)
+    pertanyaan.delete(synchronize_session=False)
     db.commit()
 
     return {
-        "Pesan": "Masalah berhasil dihapus."
+        "Pesan": "pertanyaan berhasil dihapus."
     }
